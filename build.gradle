@@ -1,0 +1,23 @@
+apply plugin: 'java'
+
+version = '1.0'
+
+jar {
+    from {configurations.compile.collect {zipTree(it)}}
+    manifest {
+         attributes 'Main-Class': 'javafuzz.JavaFuzz'
+    }
+    doFirst {
+        from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } } 
+    }
+    exclude 'META-INF/*.RSA', 'META-INF/*.SF','META-INF/*.DSA'
+    sourceSets.main.resources.srcDirs = ["src/main/java"]
+}
+
+repositories {
+    mavenCentral()
+}
+
+test {
+    systemProperties 'property': 'value'
+}
